@@ -1,0 +1,20 @@
+<html>
+  <head>
+    <title>Mintz 500</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="static/bootstrap.min.css" rel="stylesheet" media="screen">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Mintz 500</h1>
+        <h2>Hello, {{ user.username }}. Your password is {{ user.password }}</h2>
+        <br>
+      {% if error %}
+        <p class="error"><strong>Error:</strong> {{ error }}
+      {% endif %}
+      {% if message %}
+        <p class="alert alert-success"> {{ message }}
+      {% endif %}
+    </div>
+  </body>
+</html>
