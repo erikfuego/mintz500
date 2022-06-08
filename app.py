@@ -27,6 +27,8 @@ users = db.Users
 """
 I love ketchup
 """
+
+
 @app.route("/", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -97,9 +99,7 @@ def create_user(username: str, password: str) -> User:
 
 
 def get_user(username: str) -> User:
-    user_maybe = users.find_one(
-        {"_id": username}
-    )
+    user_maybe = users.find_one({"_id": username})
     if user_maybe is None:
         raise UserNotFoundError
     return User(user_maybe["username"], user_maybe["password"])
