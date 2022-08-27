@@ -21,14 +21,14 @@ app = Flask(__name__)
 
 app.config.update(SECRET_KEY="We mastered session")
 
-client = MongoClient("localhost", 27017, username="root", password="password")
+# client = MongoClient("localhost", 27017, username="root", password="password")
 
-db = client.mintz500
-users = db.Users
-pictures = db.Pictures
-
-user_dao = UserDao(db.Users)
-picture_dao = PictureDao(db.Pictures)
+# db = client.mintz500
+# users = db.Users
+# pictures = db.Pictures
+#
+# user_dao = UserDao(db.Users)
+# picture_dao = PictureDao(db.Pictures)
 
 
 """
@@ -39,22 +39,27 @@ I love ketchup
 @app.route("/", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        try:
-            username = request.form.get("username")
-            password = request.form.get("password")
+        print("Hello")
+        username = request.form.get("username")
+        session["username"] = username
+        return redirect(url_for("home"))
 
-            Validator.validate_login(username, password)
-
-            user = user_dao.get_user(username)
-            if user.password != hash_str(password):
-                raise UserNotFoundException
-
-            session["username"] = user.username
-            return redirect(url_for("home"))
-        except ValidationException as validation_ex:
-            return render_template("login.html", error=str(validation_ex))
-        except UserNotFoundException:
-            return render_template("login.html", error="Invalid username or password")
+        # try:
+        #     username = request.form.get("username")
+        #     password = request.form.get("password")
+        #
+        #     Validator.validate_login(username, password)
+        #
+        #     user = user_dao.get_user(username)
+        #     if user.password != hash_str(password):
+        #         raise UserNotFoundException
+        #
+        #     session["username"] = user.username
+        #     return redirect(url_for("home"))
+        # except ValidationException as validation_ex:
+        #     return render_template("login.html", error=str(validation_ex))
+        # except UserNotFoundException:
+        #     return render_template("login.html", error="Invalid username or password")
 
     elif request.method == "GET":
         signup_successful = session.get("signup_successful")
@@ -69,7 +74,8 @@ def login():
 def home():
     if request.method == "GET":
         if session.get("username"):
-            user = user_dao.get_user(session["username"])
+            # user = user_dao.get_user(session["username"])
+            user = session["username"]
             return render_template("home.html", user=user)
         else:
             return redirect(url_for("login"))
@@ -99,7 +105,8 @@ def signup():
 def my_cars():
     if request.method == "GET":
         if session.get("username"):
-            user = user_dao.get_user(session["username"])
+            # user = user_dao.get_user(session["username"])
+            user = session["username"]
             return render_template("my_cars.html", user=user)
         else:
             return redirect(url_for("login"))
